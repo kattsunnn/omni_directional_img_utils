@@ -113,6 +113,7 @@ class E2P:
             raise Exception("Error: Map is not generated yet. Please call generate_map() first.")
         return cv2.remap(src_img, self.map_u, self.map_v, cv2.INTER_LINEAR)
 
+#Todo: Outputの整理
 if __name__ == '__main__':
 
     import sys
@@ -123,18 +124,18 @@ if __name__ == '__main__':
     angle_u_deg = float(sys.argv[4])
     angle_v_deg = float(sys.argv[5])
     angle_z_deg = float(sys.argv[6])
-    e2p = E2P(src_img.shape[1], src_img.shape[0])
+    output_path = sys.argv[7]
 
+    e2p = E2P(src_img.shape[1], src_img.shape[0])
     optimal_width = e2p.calc_optimal_width(fov_w_deg)
     optimal_height = e2p.calc_optimal_height(fov_h_deg)
-
     e2p.generate_map( optimal_width, optimal_height, 
                       angle_u_deg, angle_v_deg, angle_z_deg,
                       scale=1.0)
-
     dst_img = e2p.generate_img(src_img)
 
     # 画像表示
     cv2.imshow("dst", dst_img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+    cv2.imwrite(output_path, dst_img)
