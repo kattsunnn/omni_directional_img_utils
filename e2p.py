@@ -19,15 +19,40 @@ class E2P:
         self.map_v = None
 
     #画角から適切な出力画像の横サイズを計算
-    def calc_optimal_width(self, fov_deg):
-        fov_rad = np.deg2rad(fov_deg)
-        optimal_w = int(2.0 * np.tan(fov_rad / 2.0) * self.src_img_w / (2*np.pi))
+    def calc_optimal_width(self, fov_w_deg):
+        fov_w_rad = np.deg2rad(fov_w_deg)
+        optimal_w = int(2.0 * np.tan(fov_w_rad / 2.0) * self.src_img_w / (2*np.pi))
         return optimal_w
+    
     # 画角から適切な出力画像の縦サイズを計算
-    def calc_optimal_height(self, fov_deg):
-        fov_rad = np.deg2rad(fov_deg)
-        optimal_h = int(2.0 * np.tan(fov_rad / 2.0) * self.src_img_h / np.pi)
+    def calc_optimal_height(self, fov_h_deg):
+        fov_h_rad = np.deg2rad(fov_h_deg)
+        optimal_h = int(2.0 * np.tan(fov_h_rad / 2.0) * self.src_img_h / np.pi)
         return optimal_h
+
+    def calc_optimal_fov_w(self, dst_width):
+        fov_w_rad = 2 * np.arctan2((dst_width/self.src_img_w) * np.pi)
+        fov_w_deg = np.rad2deg(fov_w_rad)
+        return fov_w_deg
+
+    def calc_optimal_fov_h(self, dst_height):
+        fov_h_rad = 2 * np.arctan2((dst_height/self.src_img_h) * (np.pi/2))
+        fov_h_deg = np.rad2deg(fov_h_rad)
+        return fov_h_deg
+
+    def angle_to_uv(self, angle_u_deg, angle_v_deg):
+        angle_u_rad = np.deg2rad(angle_u_deg)
+        angle_v_rad = np.deg2rad(angle_v_deg)
+        u = (angle_u_rad + np.pi) * (self.src_img_w/(2*np.pi))
+        v = (angle_v_rad + (np.pi/2)) * (self.src_img_h/(np.pi))
+        return u, v
+
+    def uv_to_angle(self, u, v):
+        angle_u_rad = (u - (self.src_img_w/2)) * ((2*np.pi)/self.src_img_w) 
+        angle_v_rad = (v - (self.src_img_h/2)) * ((np.pi)/self.src_img_h) 
+        angle_u_deg = np.rad2deg(angle_u_rad)
+        angle_v_deg = np.rad2deg(angle_v_rad)
+        return angle_u_deg, angle_v_deg
 
     # X軸周りの回転行列
     @staticmethod
@@ -68,8 +93,8 @@ class E2P:
     
     # 画像生成用のマップ作成関数
     def generate_map(self,
-                     dst_w,
-                     dst_h,
+                     fov_w_deg,
+                     fov_h_deg,
                      angle_u_deg,
                      angle_v_deg,
                      angle_z_deg,
@@ -77,6 +102,9 @@ class E2P:
         angle_u_rad = np.deg2rad(angle_u_deg)
         angle_v_rad = np.deg2rad(angle_v_deg)
         angle_z_rad = np.deg2rad(angle_z_deg)
+
+        dst_w = self.calc_optimal_width(fov_w_deg)
+        dst_h = self.calc_optimal_height(fov_h_deg)
 
         # 回転行列の計算
         R = np.dot(self.rotation_y(angle_u_rad), self.rotation_x(angle_v_rad))
@@ -124,12 +152,10 @@ if __name__ == '__main__':
     angle_u_deg = float(sys.argv[4])
     angle_v_deg = float(sys.argv[5])
     angle_z_deg = float(sys.argv[6])
-    output_path = sys.argv[7]
+
 
     e2p = E2P(src_img.shape[1], src_img.shape[0])
-    optimal_width = e2p.calc_optimal_width(fov_w_deg)
-    optimal_height = e2p.calc_optimal_height(fov_h_deg)
-    e2p.generate_map( optimal_width, optimal_height, 
+    e2p.generate_map( fov_w_deg, fov_h_deg, 
                       angle_u_deg, angle_v_deg, angle_z_deg,
                       scale=1.0)
     dst_img = e2p.generate_img(src_img)
@@ -138,4 +164,13 @@ if __name__ == '__main__':
     cv2.imshow("dst", dst_img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    cv2.imwrite(output_path, dst_img)
+
+    e2p = E2P(src_img.shape[1], src_img.shape[0])
+    e2p.generate_map( fov_w_deg, fov_h_deg, 
+                      angle_u_deg, angle_v_deg, angle_z_deg,
+                      scale=1.0)
+    dst_img = e2p.generate_img(src_img)
+
+
+    # output_path = sys.argv[7]
+    # cv2.imwrite(output_path, dst_img)
