@@ -1,5 +1,3 @@
-# 透視投影画像を保持するクラス
-
 import math
 import numpy as np
 
@@ -31,7 +29,6 @@ class PPI:
     def get_focal_length(self):
         return self.img_e_w / (2*np.pi)
 
-    # 透視投影画像の座標から全方位画像の角度座標を得る
     def get_angular_coordinate(self, u_p, v_p):
         # 透視投影画像の画像座標から回転前の3次元視線ベクトルを計算
         focal_length = self.img_e_w/(2*np.pi)
