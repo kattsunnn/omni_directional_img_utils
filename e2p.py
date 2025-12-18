@@ -20,13 +20,13 @@ class E2P:
     #画角から適切な出力画像の横サイズを計算
     def calc_optimal_width(self, fov_w_deg):
         fov_w_rad = np.deg2rad(fov_w_deg)
-        optimal_w = int(2.0 * np.tan(fov_w_rad / 2.0) * self.src_img_w / (2*np.pi))
+        optimal_w = int((self.src_img_w / np.pi) * np.tan(fov_w_rad / 2.0))
         return optimal_w
     
     # 画角から適切な出力画像の縦サイズを計算
     def calc_optimal_height(self, fov_h_deg):
         fov_h_rad = np.deg2rad(fov_h_deg)
-        optimal_h = int(2.0 * np.tan(fov_h_rad / 2.0) * self.src_img_h / np.pi)
+        optimal_h = int(2.0 * np.tan(fov_h_rad / 2.0) * (self.src_img_h / np.pi))
         return optimal_h
 
     def calc_optimal_fov_w(self, dst_width):
@@ -43,7 +43,7 @@ class E2P:
         angle_u_rad = np.deg2rad(angle_u_deg)
         angle_v_rad = np.deg2rad(angle_v_deg)
         u = (angle_u_rad + np.pi) * (self.src_img_w/(2*np.pi))
-        v = (angle_v_rad + (np.pi/2)) * (self.src_img_h/(np.pi))
+        v = (angle_v_rad + (np.pi/2)) * (self.src_img_h/np.pi)
         return u, v
 
     def uv_to_angle(self, u, v):
@@ -56,6 +56,7 @@ class E2P:
     # X軸周りの回転行列
     @staticmethod
     def rotation_x(angle):
+        angle = -angle # 回転行列の定義と資料のΦと正負の方向が異なるため、反転する必要がある
         cos_a = math.cos(angle)
         sin_a = math.sin(angle)
         R = np.array([[1.0, 0.0, 0.0],
@@ -121,18 +122,19 @@ class E2P:
         y = dst_v - dst_h * 0.5
         z = self.f * scale * np.ones((dst_h, dst_w))
         
+        # print(x[dst_h_h, dst_w_h], y[dst_h_h, dst_w_h], z[dst_h_h, dst_w_h])
         # 回転行列で回転
         Xx = R[0][0] * x + R[0][1] * y + R[0][2] * z
         Xy = R[1][0] * x + R[1][1] * y + R[1][2] * z
         Xz = R[2][0] * x + R[2][1] * y + R[2][2] * z
-        
+
         # 視線ベクトルから角度を計算
         theta = np.arctan2(Xx, Xz)
-        phi = np.arctan2(np.sqrt(Xx**2 + Xz**2), Xy)
+        phi = np.arctan2(Xy, np.sqrt(Xx**2 + Xz**2))
 
         # 角度から入力画像の座標を計算
-        self.map_u = (0.5 * (theta + np.pi) * self.src_img_w / np.pi - 0.5).astype(np.float32)
-        self.map_v = ((np.pi - phi) * self.src_img_h / np.pi - 0.5).astype(np.float32)
+        self.map_u = ((theta + np.pi) * (self.src_img_w / (2*np.pi))).astype(np.float32)
+        self.map_v = ((phi + (np.pi/2)) * (self.src_img_h / np.pi)).astype(np.float32)
 
     # 画像生成
     def generate_img(self, src_img):

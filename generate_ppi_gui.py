@@ -7,11 +7,8 @@ def generate_ppi_gui(src_img, scale=1, fov_w_deg=30, fov_v_deg=30):
     v = point[1]
     ppi_generator = E2P(src_img.shape[1], src_img.shape[0])
     angle_u_deg, angle_v_deg = ppi_generator.uv_to_angle(u, v)
-    print(angle_u_deg, angle_v_deg)
-    print(999)
     ppi_generator.generate_map(fov_w_deg, fov_v_deg, angle_u_deg, angle_v_deg, 0)
     ppi = ppi_generator.generate_img(src_img)
-
     iu.show_imgs(ppi)
 
 if __name__ == "__main__":
