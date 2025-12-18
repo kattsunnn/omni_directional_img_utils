@@ -9,7 +9,7 @@ def generate_ppi_gui(src_img, scale=1, fov_w_deg=30, fov_v_deg=30):
     angle_u_deg, angle_v_deg = ppi_generator.uv_to_angle(u, v)
     ppi_generator.generate_map(fov_w_deg, fov_v_deg, angle_u_deg, angle_v_deg, 0)
     ppi = ppi_generator.generate_img(src_img)
-    iu.show_imgs(ppi)
+    return ppi
 
 if __name__ == "__main__":
 
@@ -22,4 +22,5 @@ if __name__ == "__main__":
 
     src_img = iu.load_imgs(input_path)
 
-    generate_ppi_gui(src_img, scale, fov_w_deg, fov_h_deg)
+    ppi = generate_ppi_gui(src_img, scale, fov_w_deg, fov_h_deg)
+    iu.show_imgs(ppi)

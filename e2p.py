@@ -56,7 +56,7 @@ class E2P:
     # X軸周りの回転行列
     @staticmethod
     def rotation_x(angle):
-        angle = -angle # 回転行列の定義と資料のΦと正負の方向が異なるため、反転する必要がある
+        angle = -angle # 回転行列の定義と資料のΦと正負の方向が逆になるため、反転する必要がある
         cos_a = math.cos(angle)
         sin_a = math.sin(angle)
         R = np.array([[1.0, 0.0, 0.0],
