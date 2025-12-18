@@ -24,3 +24,6 @@ if __name__ == "__main__":
 
     ppi = generate_ppi_gui(src_img, scale, fov_w_deg, fov_h_deg)
     iu.show_imgs(ppi)
+
+    # 実行例：
+    # python .\generate_ppi_gui.py .\sample_img\sample.jpg 0.5 60 30  
