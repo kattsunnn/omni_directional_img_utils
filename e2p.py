@@ -1,4 +1,4 @@
-# Todo: 画像サイズから適切な画角を計算する関数も追加
+# Todo: 180方向で画像に欠損が生じる問題
 # Todo: 引数にValidateを追加
 
 import math
