@@ -52,6 +52,15 @@ class E2P:
         angle_u_deg = np.rad2deg(angle_u_rad)
         angle_v_deg = np.rad2deg(angle_v_rad)
         return angle_u_deg, angle_v_deg
+    
+    @staticmethod
+    def angle_to_unit_sphere(angle_u_deg, angle_v_deg):
+        angle_u_rad = np.deg2rad(angle_u_deg)
+        angle_v_rad = np.deg2rad(angle_v_deg)
+        X = np.cos(angle_v_rad) * np.sin(angle_u_rad)
+        Y = np.sin(angle_v_rad)
+        Z = np.cos(angle_v_rad) * np.cos(angle_u_rad)
+        return X, Y, Z
 
     # X軸周りの回転行列
     @staticmethod
@@ -145,33 +154,34 @@ class E2P:
 #Todo: Outputの整理
 if __name__ == '__main__':
 
-    import sys
+    print(E2P.angle_to_unit_sphere(-90, 45))
 
-    src_img = cv2.imread(sys.argv[1]) # 全方位画像
-    fov_w_deg = float(sys.argv[2])
-    fov_h_deg = float(sys.argv[3])
-    angle_u_deg = float(sys.argv[4])
-    angle_v_deg = float(sys.argv[5])
-    angle_z_deg = float(sys.argv[6])
+    # import sys
+
+    # src_img = cv2.imread(sys.argv[1]) # 全方位画像
+    # fov_w_deg = float(sys.argv[2])
+    # fov_h_deg = float(sys.argv[3])
+    # angle_u_deg = float(sys.argv[4])
+    # angle_v_deg = float(sys.argv[5])
+    # angle_z_deg = float(sys.argv[6])
 
 
-    e2p = E2P(src_img.shape[1], src_img.shape[0])
-    e2p.generate_map( fov_w_deg, fov_h_deg, 
-                      angle_u_deg, angle_v_deg, angle_z_deg,
-                      scale=1.0)
-    dst_img = e2p.generate_img(src_img)
+    # e2p = E2P(src_img.shape[1], src_img.shape[0])
+    # e2p.generate_map( fov_w_deg, fov_h_deg, 
+    #                   angle_u_deg, angle_v_deg, angle_z_deg,
+    #                   scale=1.0)
+    # dst_img = e2p.generate_img(src_img)
 
-    # 画像表示
-    cv2.imshow("dst", dst_img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # # 画像表示
+    # cv2.imshow("dst", dst_img)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
-    e2p = E2P(src_img.shape[1], src_img.shape[0])
-    e2p.generate_map( fov_w_deg, fov_h_deg, 
-                      angle_u_deg, angle_v_deg, angle_z_deg,
-                      scale=1.0)
-    dst_img = e2p.generate_img(src_img)
-
+    # e2p = E2P(src_img.shape[1], src_img.shape[0])
+    # e2p.generate_map( fov_w_deg, fov_h_deg, 
+    #                   angle_u_deg, angle_v_deg, angle_z_deg,
+    #                   scale=1.0)
+    # dst_img = e2p.generate_img(src_img)
 
     # output_path = sys.argv[7]
     # cv2.imwrite(output_path, dst_img)
