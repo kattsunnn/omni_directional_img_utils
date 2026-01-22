@@ -52,6 +52,7 @@ class PPI:
     # X軸周りの回転行列
     @staticmethod
     def rotation_x(angle):
+        angle = -angle
         cos_a = math.cos(angle)
         sin_a = math.sin(angle)
         R = np.array([[1.0, 0.0, 0.0],
