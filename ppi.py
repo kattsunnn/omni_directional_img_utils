@@ -45,7 +45,7 @@ class PPI:
         rotated_z = R[2][0] * x + R[2][1] * y + R[2][2] * z
         # 回転した視線ベクトルから全方位画像の角度座標を計算
         theta_e = np.arctan2(rotated_x, rotated_z)
-        phi_e = np.arctan2(np.sqrt(rotated_x**2 + rotated_z**2), rotated_y)
+        phi_e = np.arctan2(rotated_y, np.sqrt(rotated_x**2 + rotated_z**2))
 
         return np.rad2deg(theta_e), np.rad2deg(phi_e)
     
