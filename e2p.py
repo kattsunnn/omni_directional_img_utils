@@ -61,6 +61,23 @@ class E2P:
         Y = np.sin(angle_v_rad)
         Z = np.cos(angle_v_rad) * np.cos(angle_u_rad)
         return X, Y, Z
+    
+    @staticmethod
+    def angle_to_r_mat(angle_u_deg, angle_v_deg):
+        angle_u_rad = np.deg2rad(angle_u_deg)
+        angle_v_rad = np.deg2rad(angle_v_deg)
+        r_mat = np.dot(E2P.rotation_y(angle_u_rad), E2P.rotation_x(angle_v_rad))
+        return r_mat
+    
+    @staticmethod
+    def r_mat_to_angle(r_mat):
+        optical_axis = np.array([0,0,1], dtype=np.float32)
+        rotated_optical_axis = r_mat @ optical_axis
+        angle_u_rad = np.arctan2(rotated_optical_axis[0], rotated_optical_axis[2])
+        angle_v_rad = np.arctan2(rotated_optical_axis[1], np.sqrt(rotated_optical_axis[0]**2 + rotated_optical_axis[2]**2))
+        angle_u_deg = np.rad2deg(angle_u_rad)
+        angle_v_deg = np.rad2deg(angle_v_rad)
+        return angle_u_deg, angle_v_deg
 
     # X軸周りの回転行列
     @staticmethod
