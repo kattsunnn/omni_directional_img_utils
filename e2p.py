@@ -82,12 +82,11 @@ class E2P:
     # X軸周りの回転行列
     @staticmethod
     def rotation_x(angle):
-        angle = -angle # 回転行列の定義と資料のΦと正負の方向が逆になるため、反転する必要がある
         cos_a = math.cos(angle)
         sin_a = math.sin(angle)
         R = np.array([[1.0, 0.0, 0.0],
-                    [0.0, cos_a, -sin_a],
-                      [0.0, sin_a, cos_a]], dtype=np.float64)
+                    [0.0, cos_a, sin_a],
+                      [0.0, -sin_a, cos_a]], dtype=np.float64)
         return R
 
     # Y軸周りの回転行列
@@ -181,6 +180,10 @@ if __name__ == '__main__':
     angle_v_deg = float(sys.argv[5])
     angle_z_deg = float(sys.argv[6])
 
+    r_mat =  E2P.angle_to_r_mat(angle_u_deg, angle_v_deg)
+    angle_u, angle_v = E2P.r_mat_to_angle(r_mat)
+    print(r_mat)
+    print(angle_u, angle_v)
 
     e2p = E2P(src_img.shape[1], src_img.shape[0])
     e2p.generate_map( fov_w_deg, fov_h_deg, 
@@ -192,10 +195,10 @@ if __name__ == '__main__':
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-    from ppi import PPI
+    # from ppi import PPI
 
-    ppi = PPI(src_img, dst_img, angle_u_deg, angle_v_deg)
-    print(ppi.get_angular_coordinate(dst_img.shape[1]/2, dst_img.shape[0]/2))
+    # ppi = PPI(src_img, dst_img, angle_u_deg, angle_v_deg)
+    # print(ppi.get_angular_coordinate(dst_img.shape[1]/2, dst_img.shape[0]/2))
     # # 画像表示
 
     # e2p = E2P(src_img.shape[1], src_img.shape[0])
