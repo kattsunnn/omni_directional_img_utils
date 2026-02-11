@@ -54,6 +54,14 @@ class E2P:
         return angle_u_deg, angle_v_deg
     
     @staticmethod
+    def eye_vec_to_angle(eye_vec):
+        angle_u_rad = np.arctan2(eye_vec[0], eye_vec[2])
+        angle_v_rad = np.arctan2(eye_vec[1], np.sqrt(eye_vec[0]**2 + eye_vec[2]**2))
+        angle_u_deg = np.rad2deg(angle_u_rad)
+        angle_v_deg = np.rad2deg(angle_v_rad)
+        return angle_u_deg, angle_v_deg
+        
+    @staticmethod
     def angle_to_unit_sphere(angle_u_deg, angle_v_deg):
         angle_u_rad = np.deg2rad(angle_u_deg)
         angle_v_rad = np.deg2rad(angle_v_deg)
