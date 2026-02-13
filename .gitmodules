@@ -1,6 +1,0 @@
-[submodule "img_utils"]
-	path = submodules/img_utils
-	url = git@github.com:kattsunnn/img_utils.git
-[submodule "camera_pose_estimation"]
-	path = submodules/camera_pose_estimation
-	url = git@github.com:kattsunnn/camera_pose_estimation.git
