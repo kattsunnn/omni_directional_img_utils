@@ -1,6 +1,6 @@
 import math
 import numpy as np
-from e2p import E2P
+from .e2p import E2P
 
 class PPI:
     def __init__(self, img_e, img_p, theta_e_deg, phi_e_deg):
