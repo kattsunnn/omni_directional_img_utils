@@ -1,5 +1,6 @@
 # Todo: 180方向で画像に欠損が生じる問題
 # Todo: 引数にValidateを追加
+# Todo: 変数名等をPPIと統一
 
 import math
 import numpy as np
@@ -180,6 +181,7 @@ if __name__ == '__main__':
 
 
     import sys
+    from ppi import PPI
 
     src_img = cv2.imread(sys.argv[1]) # 全方位画像
     fov_w_deg = float(sys.argv[2])
@@ -188,17 +190,16 @@ if __name__ == '__main__':
     angle_v_deg = float(sys.argv[5])
     angle_z_deg = float(sys.argv[6])
 
-    r_mat =  E2P.angle_to_r_mat(angle_u_deg, angle_v_deg)
-    angle_u, angle_v = E2P.r_mat_to_angle(r_mat)
-    print(r_mat)
-    print(angle_u, angle_v)
-
     e2p = E2P(src_img.shape[1], src_img.shape[0])
     e2p.generate_map( fov_w_deg, fov_h_deg, 
                       angle_u_deg, angle_v_deg, angle_z_deg,
                       scale=1.0)
     dst_img = e2p.generate_img(src_img)
-    
+
+    ppi = PPI(src_img, dst_img, angle_u_deg, angle_v_deg)
+    print(ppi.get_gaze_point_of_angle_coor())
+    print(ppi.get_gaze_point_of_img_coor())
+    print(ppi.convert_ppi_point_to_angle_coor(ppi.get_ppi().shape[1]/2, ppi.get_ppi().shape[0]/2))
     cv2.imshow("dst", dst_img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()

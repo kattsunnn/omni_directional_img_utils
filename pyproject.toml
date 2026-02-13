@@ -1,0 +1,17 @@
+[build_system]
+requires = ["setuptools", "wheel"]
+build_backend = "setuptools.build_meta"
+
+[project]
+name = "omni_directional_img_utils"
+version = "0.1.0"
+description = "全方位画像のユーティリティ"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "numpy", 
+    "opencv-python",
+]
+
+[tool.setuptools]
+packages = ["omni_directional_img_utils"]
