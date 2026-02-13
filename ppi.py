@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from e2p import E2P
 
 class PPI:
     def __init__(self, img_e, img_p, angle_u, angle_v):
@@ -38,36 +39,15 @@ class PPI:
         # 透視投影画像の生成に使用した回転行列を計算
         angle_u_rad = np.deg2rad(self.angle_u)
         angle_v_rad = np.deg2rad(self.angle_v)
-        R = np.dot(PPI.rotation_y(angle_u_rad), PPI.rotation_x(angle_v_rad))
+        R = np.dot(E2P.rotation_y(angle_u_rad), E2P.rotation_x(angle_v_rad))
         # 回転後の視線ベクトルを計算
         rotated_x = R[0][0] * x + R[0][1] * y + R[0][2] * z
         rotated_y = R[1][0] * x + R[1][1] * y + R[1][2] * z
         rotated_z = R[2][0] * x + R[2][1] * y + R[2][2] * z
         # 回転した視線ベクトルから全方位画像の角度座標を計算
-        theta_e = np.arctan2(rotated_x, rotated_z)
-        phi_e = np.arctan2(rotated_y, np.sqrt(rotated_x**2 + rotated_z**2))
-
-        return np.rad2deg(theta_e), np.rad2deg(phi_e)
+        theta_e, phi_e = E2P.eye_vec_to_angle([rotated_x, rotated_y, rotated_z])
+        return theta_e, phi_e
     
-    # X軸周りの回転行列
-    @staticmethod
-    def rotation_x(angle):
-        angle = -angle
-        cos_a = math.cos(angle)
-        sin_a = math.sin(angle)
-        R = np.array([[1.0, 0.0, 0.0],
-                    [0.0, cos_a, -sin_a],
-                    [0.0, sin_a, cos_a]], dtype=np.float64)
-        return R
-    # Y軸周りの回転行列
-    @staticmethod
-    def rotation_y(angle):
-        cos_a = math.cos(angle)
-        sin_a = math.sin(angle)
-        R = np.array([[cos_a, 0.0, sin_a],
-                    [0.0, 1.0, 0.0],
-                    [-sin_a, 0.0, cos_a]], dtype=np.float64)
-        return R
     
 
     
