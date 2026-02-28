@@ -47,7 +47,7 @@ class PPI:
         rotated_y = R[1][0] * x + R[1][1] * y + R[1][2] * z
         rotated_z = R[2][0] * x + R[2][1] * y + R[2][2] * z
         # 回転した視線ベクトルから全方位画像の角度座標を計算
-        theta_e, phi_e = E2P.eye_vec_to_angle([rotated_x, rotated_y, rotated_z])
+        theta_e, phi_e = E2P.gaze_vec_to_angle([rotated_x, rotated_y, rotated_z])
         return theta_e, phi_e
 
     

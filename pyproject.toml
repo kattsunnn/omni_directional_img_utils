@@ -19,3 +19,12 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/omni_directional_img_utils"]
+
+[tool.uv.sources]
+img-utils = { git = "https://github.com/kattsunnn/img_utils.git" }
+
+[dependency-groups]
+dev = [
+    "click>=8.3.1",
+    "img-utils",
+]
