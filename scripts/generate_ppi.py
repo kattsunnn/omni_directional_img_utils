@@ -10,6 +10,7 @@ import sys
 import cv2
 
 from omni_directional_img_utils.e2p import E2P
+from omni_directional_img_utils.ppi import PPI
 import img_utils as iu
 
 src_img = cv2.imread(sys.argv[1]) # 全方位画像
@@ -27,10 +28,7 @@ dst_img = e2p.generate_img(src_img)
 
 iu.show_imgs(dst_img)
 
-# ppi = PPI(src_img, dst_img, angle_u_deg, angle_v_deg)
+ppi = PPI(src_img, dst_img, angle_u_deg, angle_v_deg)
 # print(ppi.get_gaze_point_of_angle_coor())
 # print(ppi.get_gaze_point_of_img_coor())
-# print(ppi.convert_ppi_point_to_angle_coor(ppi.get_ppi().shape[1]/2, ppi.get_ppi().shape[0]/2))
-# cv2.imshow("dst", dst_img)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+print(ppi.convert_ppi_point_to_angle_coor(ppi.get_ppi().shape[1]/2, ppi.get_ppi().shape[0]/2))
