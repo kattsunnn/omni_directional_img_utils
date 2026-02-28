@@ -32,3 +32,5 @@ ppi = PPI(src_img, dst_img, angle_u_deg, angle_v_deg)
 # print(ppi.get_gaze_point_of_angle_coor())
 # print(ppi.get_gaze_point_of_img_coor())
 print(ppi.convert_ppi_point_to_angle_coor(ppi.get_ppi().shape[1]/2, ppi.get_ppi().shape[0]/2))
+
+# uv run .\generate_ppi.py .\sample\sample.jpg 60 60 30 0 0
