@@ -1,9 +1,21 @@
-import click
 from pathlib import Path
+
+import click
 import numpy as np
-import img_utils.img_utils as iu
-from generate_ppi import generate_ppi_with_gui
-from e2p import E2P
+
+import img_utils as iu
+from omni_directional_img_utils.e2p import E2P
+
+def generate_ppi_with_gui(src_img, scale=1, fov_w_deg=30, fov_v_deg=30):
+    point, _ = iu.get_single_point_with_gui(src_img, scale)
+    u = point[0]
+    v = point[1]
+    ppi_generator = E2P(src_img.shape[1], src_img.shape[0])
+    angle_u_deg, angle_v_deg = ppi_generator.uv_to_angle(u, v)
+    ppi_generator.generate_map(fov_w_deg, fov_v_deg, angle_u_deg, angle_v_deg, 0)
+    ppi = ppi_generator.generate_img(src_img)
+    r_mat = E2P.angle_to_r_mat(angle_u_deg, angle_v_deg)
+    return ppi, r_mat
 
 @click.command
 @iu.prepare_io_path

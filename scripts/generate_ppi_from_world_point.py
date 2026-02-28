@@ -1,8 +1,9 @@
-import camera_pose_estimation.camera_calibration_utils as ccu
-import img_utils.img_utils as iu
-from e2p import E2P
-import numpy as np
 import sys
+
+import numpy as np
+
+import img_utils as iu
+from omni_directional_img_utils.e2p import E2P
 
 img_dir = sys.argv[1]
 extrinsics_dir = sys.argv[2]
