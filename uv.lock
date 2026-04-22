@@ -107,6 +107,7 @@ dependencies = [
 dev = [
     { name = "click" },
     { name = "img-utils" },
+    { name = "opencv-python" },
 ]
 
 [package.metadata]
@@ -119,6 +120,7 @@ requires-dist = [
 dev = [
     { name = "click", specifier = ">=8.3.1" },
     { name = "img-utils", git = "https://github.com/kattsunnn/img_utils.git" },
+    { name = "opencv-python", specifier = ">=4.13.0.92" },
 ]
 
 [[package]]

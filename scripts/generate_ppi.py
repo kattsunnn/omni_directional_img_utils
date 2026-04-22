@@ -10,7 +10,6 @@ import sys
 import cv2
 
 from omni_directional_img_utils.e2p import E2P
-from omni_directional_img_utils.ppi import PPI
 import img_utils as iu
 
 src_img = cv2.imread(sys.argv[1]) # 全方位画像
@@ -25,12 +24,12 @@ e2p.generate_map( fov_w_deg, fov_h_deg,
                     angle_u_deg, angle_v_deg, angle_z_deg,
                     scale=1.0)
 dst_img = e2p.generate_img(src_img)
-
 iu.show_imgs(dst_img)
 
-ppi = PPI(src_img, dst_img, angle_u_deg, angle_v_deg)
-# print(ppi.get_gaze_point_of_angle_coor())
-# print(ppi.get_gaze_point_of_img_coor())
-print(ppi.convert_ppi_point_to_angle_coor(ppi.get_ppi().shape[1]/2, ppi.get_ppi().shape[0]/2))
+if len(sys.argv) > 7:
+    output_path = sys.argv[7]
+    cv2.imwrite(output_path, dst_img)
+    print(f"Image saved to: {output_path}")
 
 # uv run .\generate_ppi.py .\sample\sample.jpg 60 60 30 0 0
+# foreach ($img in Get-Item "C:\Users\naoki\Prog\output\frame_division\surrounding_frames\tennis_center\camera_00\*.jpg") { python scripts/generate_ppi.py $img.FullName 30 30 -27 1 0 }
