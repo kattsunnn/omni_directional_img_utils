@@ -169,9 +169,8 @@ class E2P:
         # 角度から入力画像の座標を計算
         self.map_u = ((theta + np.pi) * (self.src_img_w / (2*np.pi))).astype(np.float32)
         self.map_v = ((phi + (np.pi/2)) * (self.src_img_h / np.pi)).astype(np.float32)
-
     # 画像生成
     def generate_img(self, src_img):
         if self.map_u is None or self.map_v is None:
             raise Exception("Error: Map is not generated yet. Please call generate_map() first.")
-        return cv2.remap(src_img, self.map_u, self.map_v, cv2.INTER_LINEAR)
+        return cv2.remap(src_img, self.map_u, self.map_v, cv2.INTER_LINEAR, borderMode=cv2.BORDER_WRAP)
