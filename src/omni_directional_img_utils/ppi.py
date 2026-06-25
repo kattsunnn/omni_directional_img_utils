@@ -23,16 +23,16 @@ class PPI:
     def get_focal_length(self):
         return self.img_e_w / (2*np.pi)
 
-    def get_gaze_point_of_angle_coor(self):
+    def get_gaze_point_of_src_angle_coor(self):
         return self.theta_e_deg, self.phi_e_deg
-    def get_gaze_point_of_img_coor(self):
+    def get_gaze_point_of_src_img_coor(self):
         theta_e_rad = np.deg2rad(self.theta_e_deg)
         phi_e_rad = np.deg2rad(self.phi_e_deg)
         u = (theta_e_rad + np.pi) * (self.img_e_w/(2*np.pi))
         v = (phi_e_rad + (np.pi/2)) * (self.img_e_h/np.pi)
         return u, v
 
-    def convert_ppi_point_to_angle_coor(self, u_p, v_p):
+    def convert_ppi_point_to_src_angle_coor(self, u_p, v_p):
         # 透視投影画像の画像座標から回転前の3次元視線ベクトルを計算
         focal_length = self.img_e_w/(2*np.pi)
         x = u_p-(self.img_p_w/2)
@@ -49,8 +49,12 @@ class PPI:
         # 回転した視線ベクトルから全方位画像の角度座標を計算
         theta_e, phi_e = E2P.gaze_vec_to_angle([rotated_x, rotated_y, rotated_z])
         return theta_e, phi_e
-
     
-
+    def convert_ppi_point_to_src_img_coor(self, u_p, v_p):
+        theta_e, phi_e = self.convert_ppi_point_to_src_angle_coor(u_p, v_p)
+        theta_e_rad = np.deg2rad(theta_e)
+        phi_e_rad = np.deg2rad(phi_e)
+        u = int((theta_e_rad + np.pi) * (self.img_e_w/(2*np.pi)))
+        v = int((phi_e_rad + (np.pi/2)) * (self.img_e_h/np.pi))
+        return u, v
     
-
