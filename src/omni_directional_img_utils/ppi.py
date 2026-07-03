@@ -34,7 +34,7 @@ class PPI:
 
     def convert_ppi_point_to_src_angle_coor(self, u_p, v_p):
         # 透視投影画像の画像座標から回転前の3次元視線ベクトルを計算
-        focal_length = self.img_e_w/(2*np.pi)
+        focal_length = self.get_focal_length() 
         x = u_p-(self.img_p_w/2)
         y = v_p-(self.img_p_h/2)
         z = focal_length
@@ -69,6 +69,7 @@ class PPI:
         # 回転前の視線ベクトルを計算
         init_vec = R.T @ target_vec
         # 視線ベクトルから透視投影面上のuv座標を計算
-        u_p = init_vec[0] + (self.img_p_w/2)
-        v_p = init_vec[1] + (self.img_p_h/2)
+        focal_length = self.get_focal_length() 
+        u_p = (focal_length * init_vec[0] / init_vec[2]) + (self.img_p_w/2)
+        v_p = (focal_length * init_vec[1] / init_vec[2]) + (self.img_p_h/2)
         return int(round(u_p)), int(round(v_p))
