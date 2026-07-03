@@ -45,7 +45,7 @@ class E2P:
         angle_v_rad = np.deg2rad(angle_v_deg)
         u = (angle_u_rad + np.pi) * (self.src_img_w/(2*np.pi))
         v = (angle_v_rad + (np.pi/2)) * (self.src_img_h/np.pi)
-        return u, v
+        return int(round(u)), int(round(v))
 
     def uv_to_angle(self, u, v):
         angle_u_rad = (u - (self.src_img_w/2)) * ((2*np.pi)/self.src_img_w) 

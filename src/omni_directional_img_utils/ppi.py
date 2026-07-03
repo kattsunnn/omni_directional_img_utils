@@ -30,7 +30,7 @@ class PPI:
         phi_e_rad = np.deg2rad(self.phi_e_deg)
         u = (theta_e_rad + np.pi) * (self.img_e_w/(2*np.pi))
         v = (phi_e_rad + (np.pi/2)) * (self.img_e_h/np.pi)
-        return u, v
+        return int(round(u)), int(round(v))
 
     def convert_ppi_point_to_src_angle_coor(self, u_p, v_p):
         # 透視投影画像の画像座標から回転前の3次元視線ベクトルを計算
@@ -54,9 +54,9 @@ class PPI:
         theta_e, phi_e = self.convert_ppi_point_to_src_angle_coor(u_p, v_p)
         theta_e_rad = np.deg2rad(theta_e)
         phi_e_rad = np.deg2rad(phi_e)
-        u = int((theta_e_rad + np.pi) * (self.img_e_w/(2*np.pi)))
-        v = int((phi_e_rad + (np.pi/2)) * (self.img_e_h/np.pi))
-        return u, v
+        u = (theta_e_rad + np.pi) * (self.img_e_w/(2*np.pi))
+        v = (phi_e_rad + (np.pi/2)) * (self.img_e_h/np.pi)
+        return int(round(u)), int(round(v))
     
     def convert_src_angle_coor_to_ppi_point(self, target_theta_e_deg, target_phi_e_deg):
         # 角度座標から視線ベクトルを計算
@@ -71,4 +71,4 @@ class PPI:
         # 視線ベクトルから透視投影面上のuv座標を計算
         u_p = init_vec[0] + (self.img_p_w/2)
         v_p = init_vec[1] + (self.img_p_h/2)
-        return u_p, v_p
+        return int(round(u_p)), int(round(v_p))
