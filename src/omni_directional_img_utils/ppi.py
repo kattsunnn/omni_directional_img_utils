@@ -58,3 +58,17 @@ class PPI:
         v = int((phi_e_rad + (np.pi/2)) * (self.img_e_h/np.pi))
         return u, v
     
+    def convert_src_angle_coor_to_ppi_point(self, target_theta_e_deg, target_phi_e_deg):
+        # 角度座標から視線ベクトルを計算
+        X, Y, Z = E2P.angle_to_unit_sphere(target_theta_e_deg, target_phi_e_deg) 
+        target_vec = np.array([X, Y, Z])
+        # 変換に使用した回転行列を計算
+        gaze_theta_e_rad = np.deg2rad(self.theta_e_deg)
+        gaze_phi_e_rad = np.deg2rad(self.phi_e_deg)
+        R = np.dot(E2P.rotation_y(gaze_theta_e_rad), E2P.rotation_x(gaze_phi_e_rad))
+        # 回転前の視線ベクトルを計算
+        init_vec = R.T @ target_vec
+        # 視線ベクトルから透視投影面上のuv座標を計算
+        u_p = init_vec[0] + (self.img_p_w/2)
+        v_p = init_vec[1] + (self.img_p_h/2)
+        return u_p, v_p
