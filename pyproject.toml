@@ -28,4 +28,5 @@ dev = [
     "click>=8.3.1",
     "img-utils",
     "opencv-python>=4.13.0.92",
+    "pyqt6>=6.11.0",
 ]
