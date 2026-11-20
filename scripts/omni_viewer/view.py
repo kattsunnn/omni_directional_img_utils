@@ -57,11 +57,16 @@ QPushButton {
     border-radius: 4px;
     padding: 5px 12px;
 }
-QPushButton:hover {
+QPushButton:enabled:hover {
     background-color: #3f3f46;
 }
 QPushButton:pressed {
     background-color: #18181b;
+}
+QPushButton:disabled {
+    background-color: #18181b;
+    color: #52525b;
+    border: 1px solid #27272a;
 }
 QLineEdit, QDoubleSpinBox {
     background-color: #09090b;
@@ -562,6 +567,7 @@ class OmniViewerWindow(QMainWindow):
     undoRequested = pyqtSignal()
     savePointsClicked = pyqtSignal()
     saveLinesClicked = pyqtSignal()
+    saveIntrinsicsClicked = pyqtSignal()
     saveViewParamsClicked = pyqtSignal()
     fileDropped = pyqtSignal(str)
 
@@ -668,6 +674,11 @@ class OmniViewerWindow(QMainWindow):
         self.btn_save_lines.setToolTip("選択した線の始点・端点（x y 焦点距離）を交互にスタックして.dat形式で保存")
         self.btn_save_lines.clicked.connect(self.saveLinesClicked.emit)
 
+        self.btn_save_intrinsics = QPushButton("内部パラメータ保存")
+        self.btn_save_intrinsics.setEnabled(False)
+        self.btn_save_intrinsics.setToolTip("ロック中の内部パラメータ行列 (3x3) を半角スペース区切りの.dat形式で保存")
+        self.btn_save_intrinsics.clicked.connect(self.saveIntrinsicsClicked.emit)
+
         self.btn_save_view_params = QPushButton("視点情報保存")
         self.btn_save_view_params.setEnabled(False)
         self.btn_save_view_params.setToolTip("ロック中の水平角 垂直角 横FOV 縦FOV 出力幅 出力高を半角スペース区切りで保存")
@@ -691,6 +702,7 @@ class OmniViewerWindow(QMainWindow):
         tab_controls_layout.addWidget(self.btn_undo)
         tab_controls_layout.addWidget(self.btn_save_pts)
         tab_controls_layout.addWidget(self.btn_save_lines)
+        tab_controls_layout.addWidget(self.btn_save_intrinsics)
         tab_controls_layout.addWidget(self.btn_save_view_params)
         tab_controls_layout.addWidget(self.btn_reset)
         tab_controls_layout.addWidget(self.lbl_help)
@@ -770,6 +782,7 @@ class OmniViewerWindow(QMainWindow):
         self.btn_undo.setEnabled(is_locked)
         self.btn_save_pts.setEnabled(is_locked)
         self.btn_save_lines.setEnabled(is_locked)
+        self.btn_save_intrinsics.setEnabled(is_locked)
         self.btn_save_view_params.setEnabled(is_locked)
 
         if is_locked:

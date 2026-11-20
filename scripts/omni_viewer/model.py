@@ -251,6 +251,34 @@ class OmniViewerModel(QObject):
             self.errorMessage.emit(f"ファイル保存エラー: {e}")
             return False
 
+    def save_intrinsics_dat(self, file_path: str) -> bool:
+        """
+        カメラ内部パラメータ行列 (3x3) を.dat形式で保存:
+        f  0  cx
+        0  f  cy
+        0  0  1
+        (f = src_img_w / (2*pi), cx = dst_w / 2, cy = dst_h / 2)
+        """
+        if self.src_img is None or self.rendered_img is None:
+            self.errorMessage.emit("保存エラー: 画像が読み込まれていません")
+            return False
+
+        fl = self.focal_length
+        dst_h, dst_w = self.rendered_img.shape[:2]
+        cx = dst_w / 2.0
+        cy = dst_h / 2.0
+
+        try:
+            with open(file_path, "w", encoding="utf-8") as f:
+                f.write(f"{fl:.2f} 0 {cx:.2f}\n")
+                f.write(f"0 {fl:.2f} {cy:.2f}\n")
+                f.write("0 0 1\n")
+            self.infoMessage.emit(f"内部パラメータを保存しました: {os.path.basename(file_path)}")
+            return True
+        except Exception as e:
+            self.errorMessage.emit(f"ファイル保存エラー: {e}")
+            return False
+
     def save_view_params_dat(self, file_path: str) -> bool:
         """
         現在の視点情報を.dat形式で保存:

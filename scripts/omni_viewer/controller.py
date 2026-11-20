@@ -36,6 +36,7 @@ class OmniViewerController:
         self.window.undoRequested.connect(self.model.undo_annotation)
         self.window.savePointsClicked.connect(self._on_save_points_clicked)
         self.window.saveLinesClicked.connect(self._on_save_lines_clicked)
+        self.window.saveIntrinsicsClicked.connect(self._on_save_intrinsics_clicked)
         self.window.saveViewParamsClicked.connect(self._on_save_view_params_clicked)
         self.window.fileDropped.connect(self._on_file_dropped)
 
@@ -117,6 +118,24 @@ class OmniViewerController:
         )
         if file_path:
             self.model.save_lines_dat(file_path)
+
+    def _on_save_intrinsics_clicked(self):
+        """ロック中のカメラ内部パラメータ行列 (3x3) を.dat保存する"""
+        if not self.model.is_locked:
+            self.window.set_status_message("⚠️ 内部パラメータの保存はロック中のみ可能です")
+            return
+        if self.model.src_img is None or self.model.rendered_img is None:
+            self.window.set_status_message("⚠️ 画像が読み込まれていません")
+            return
+
+        file_path, _ = QFileDialog.getSaveFileName(
+            self.window,
+            "内部パラメータを保存 (.dat)",
+            "intrinsics.dat",
+            "DATファイル (*.dat);;すべてのファイル (*.*)"
+        )
+        if file_path:
+            self.model.save_intrinsics_dat(file_path)
 
     def _on_save_view_params_clicked(self):
         """ロック中の視点情報を.dat保存する"""
